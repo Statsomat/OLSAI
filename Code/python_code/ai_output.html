@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Regression Diagnostics</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .math {
+            text-align: center;
+            margin: 1em 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Part 1: Exploratory Data Analysis</h1>
+    <br>
+    <h2>What are Descriptive Statistics?</h2>
+    <p><p>Descriptive statistics are a set of brief descriptive coefficients that summarize a given data set, which can be either a representation of the entire population or a sample of a population. These statistics are broken down into measures of central tendency and measures of variability (spread).</p>
+
+<ol>
+<li><p><strong>Measures of Central Tendency</strong>: These are used to describe the center of a data set. The most common measures are:</p>
+
+<ul>
+<li><strong>Mean</strong>: The average of all data points.</li>
+<li><strong>Median</strong>: The middle value when the data points are arranged in ascending order.</li>
+<li><strong>Mode</strong>: The most frequently occurring value in the data set.</li>
+</ul></li>
+<li><p><strong>Measures of Variability (Spread)</strong>: These describe the spread or dispersion within a data set. Common measures include:</p>
+
+<ul>
+<li><strong>Range</strong>: The difference between the highest and lowest values.</li>
+<li><strong>Variance</strong>: The average of the squared differences from the mean.</li>
+<li><strong>Standard Deviation</strong>: The square root of the variance, representing the average distance of each data point from the mean.</li>
+<li><strong>Interquartile Range (IQR)</strong>: The range within which the central 50% of the data points lie, calculated as the difference between the 75th percentile (Q3) and the 25th percentile (Q1).</li>
+</ul></li>
+<li><p><strong>Other Descriptive Statistics</strong>:</p>
+
+<ul>
+<li><strong>Skewness</strong>: A measure of the asymmetry of the distribution of values.</li>
+<li><strong>Kurtosis</strong>: A measure of the "tailedness" of the distribution.</li>
+</ul></li>
+</ol>
+
+<p>Descriptive statistics provide simple summaries about the sample and the measures. They form the basis of virtually every quantitative analysis of data.</p>
+</p>
+    <br>
+    <h2>The Table of Descriptive Statistics</h2>
+
+    <div>
+        <table>
+  <tr><td>       </td><td>   ant_exclusion </td><td>   stem_diameter </td><td>   height </td><td>     canopy </td><td>   dw_healthy </td><td>   dw_infect </td><td>   dw_total </td><td>   fw_pulb </td><td>   fw_seeds </td><td>   fw_total </td><td>   ab_fl_op </td><td>   ab_fl_cl </td><td>    ab_fl </td></tr>
+  <tr><td> count </td><td>      120        </td><td>       120       </td><td> 120      </td><td> 120        </td><td>       120    </td><td>     120     </td><td>    120     </td><td>     120   </td><td>     120    </td><td>      120   </td><td>    120     </td><td>     120    </td><td>   120    </td></tr>
+  <tr><td> mean  </td><td>        0.5      </td><td>        27.0966  </td><td> 293      </td><td>   0.329775 </td><td>      1054.78 </td><td>     149.55  </td><td>   1203.53  </td><td>   16239.7 </td><td>    5404.45 </td><td>    21617.6 </td><td>   1550.13  </td><td>    3910.92 </td><td>  5452.61 </td></tr>
+  <tr><td> std   </td><td>        0.502096 </td><td>         5.30599 </td><td>  34.6056 </td><td>   0.173708 </td><td>       750.21 </td><td>     146.953 </td><td>    824.982 </td><td>   10796.7 </td><td>    3541.42 </td><td>    14236.2 </td><td>    904.836 </td><td>    2230.83 </td><td>  3106.13 </td></tr>
+  <tr><td> min   </td><td>        0        </td><td>        15.7375  </td><td> 223.75   </td><td>   0.015    </td><td>         0    </td><td>       0     </td><td>      0     </td><td>       0   </td><td>       0    </td><td>        0   </td><td>    241     </td><td>     741    </td><td>  1114    </td></tr>
+  <tr><td> 25%   </td><td>        0        </td><td>        23.375   </td><td> 270.375  </td><td>   0.18125  </td><td>       447.25 </td><td>      46.75  </td><td>    573.25  </td><td>    8083.5 </td><td>    2824.25 </td><td>    11107.2 </td><td>    905.25  </td><td>    2277.5  </td><td>  3178.25 </td></tr>
+  <tr><td> 50%   </td><td>        0.5      </td><td>        26.7125  </td><td> 287.875  </td><td>   0.344167 </td><td>       939.5  </td><td>     116     </td><td>   1135     </td><td>   14767   </td><td>    4983    </td><td>    19292   </td><td>   1360     </td><td>    3440.5  </td><td>  4798    </td></tr>
+  <tr><td> 75%   </td><td>        1        </td><td>        30.3656  </td><td> 313.188  </td><td>   0.449167 </td><td>      1536    </td><td>     216.5   </td><td>   1717.5   </td><td>   21869.2 </td><td>    7544.5  </td><td>    29008.2 </td><td>   2018.75  </td><td>    5053.25 </td><td>  7006.75 </td></tr>
+  <tr><td> max   </td><td>        1        </td><td>        46.6     </td><td> 399.5    </td><td>   0.708333 </td><td>      3045    </td><td>     920     </td><td>   3500     </td><td>   60787   </td><td>   17025    </td><td>    77812   </td><td>   4369     </td><td>   12469    </td><td> 16501    </td></tr>
+</table>
+    </div>
+    <p><p>The summary statistics provided in the table give us a snapshot of the dataset's characteristics. Here's a breakdown of what each row represents:</p>
+
+<ol>
+<li><p><strong>Count</strong>: This indicates the number of observations in each column. In this dataset, each column has 120 observations.</p></li>
+<li><p><strong>Mean</strong>: The average value of each column. It provides a central value for the data. For example, the mean of the <code>stem_diameter</code> is approximately 27.10.</p></li>
+<li><p><strong>Standard Deviation (std)</strong>: This measures the amount of variation or dispersion in the data. A higher standard deviation indicates more spread out data. For instance, the <code>fw_pulb</code> has a standard deviation of about 10796.7, indicating a wide range of values.</p></li>
+<li><p><strong>Minimum (min)</strong>: The smallest value in each column. For example, the minimum <code>height</code> is 223.75.</p></li>
+<li><p><strong>25th Percentile (25%)</strong>: Also known as the first quartile, it indicates that 25% of the data points are below this value. For example, 25% of the <code>canopy</code> values are below 0.18125.</p></li>
+<li><p><strong>50th Percentile (50%)</strong>: Also known as the median, it divides the data into two equal halves. For example, the median <code>dw_healthy</code> is 939.5.</p></li>
+<li><p><strong>75th Percentile (75%)</strong>: Also known as the third quartile, it indicates that 75% of the data points are below this value. For example, 75% of the <code>fw_seeds</code> values are below 7544.5.</p></li>
+<li><p><strong>Maximum (max)</strong>: The largest value in each column. For example, the maximum <code>ab_fl</code> is 16501.</p></li>
+</ol>
+
+<p>These statistics help us understand the distribution, central tendency, and variability of the data, providing insights into the dataset's overall structure.</p>
+</p>
+    <br>
+    <h2>Visual Representation of the Data</h2>
+    <h3>Histograms</h3>
+    <p><ol>
+<li><p><strong>What are histograms?</strong></p>
+
+<p>A histogram is a graphical representation of the distribution of numerical data. It is an estimate of the probability distribution of a continuous variable and was first introduced by Karl Pearson. A histogram is similar to a bar graph in structure, but it groups numbers into ranges (bins) and displays the frequency of data points within each range.</p></li>
+<li><p><strong>What are the components of a histogram?</strong></p>
+
+<ul>
+<li><strong>Bins</strong>: These are the intervals that divide the entire range of values into a series of intervals. Each bin represents a range of data.</li>
+<li><strong>Frequency</strong>: This is the number of data points that fall within each bin.</li>
+<li><strong>Bars</strong>: Each bar represents the frequency of data points within a bin. The height of the bar corresponds to the frequency.</li>
+<li><strong>X-axis</strong>: Represents the variable being measured.</li>
+<li><strong>Y-axis</strong>: Represents the frequency of data points within each bin.</li>
+</ul></li>
+<li><p><strong>How do I interpret a histogram?</strong></p>
+
+<ul>
+<li><strong>Shape</strong>: The shape of the histogram can indicate the distribution of the data (e.g., normal, skewed, bimodal).</li>
+<li><strong>Spread</strong>: The width of the histogram shows the range of the data.</li>
+<li><strong>Center</strong>: The peak of the histogram indicates where most data points are concentrated.</li>
+<li><strong>Outliers</strong>: Bars that are isolated from the rest of the data may indicate outliers.</li>
+</ul></li>
+<li><p><strong>Provide histograms for every variable of the dataset.</strong></p></li>
+</ol>
+
+<p>Let's create histograms for each variable in the dataset using the specified style.</p>
+</p>
+    <img src="image5.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <p><p>Here are the histograms for each variable in the dataset. Each histogram shows the distribution of data points for a specific variable, with the x-axis representing the variable's values and the y-axis representing the frequency of those values. The gray bars indicate the frequency of data points within each bin, and the smooth line (KDE) represents the estimated probability density function of the variable. By examining these histograms, you can gain insights into the distribution, central tendency, and spread of each variable in the dataset.</p>
+</p>
+    <br>
+    <h3>Boxplots</h3>
+    <p><ol>
+<li><p><strong>What are boxplots?</strong></p>
+
+<p>A boxplot, also known as a whisker plot, is a standardized way of displaying the distribution of data based on a five-number summary: minimum, first quartile (Q1), median, third quartile (Q3), and maximum. Boxplots are useful for identifying outliers and for comparing distributions between different datasets.</p></li>
+<li><p><strong>What are the components of a boxplot?</strong></p>
+
+<ul>
+<li><strong>Box</strong>: The central box represents the interquartile range (IQR), which contains the middle 50% of the data. The edges of the box are the first quartile (Q1) and the third quartile (Q3).</li>
+<li><strong>Median Line</strong>: A line inside the box indicates the median (the middle value) of the data.</li>
+<li><strong>Whiskers</strong>: Lines extending from the box to the smallest and largest values within 1.5 times the IQR from the lower and upper quartiles, respectively.</li>
+<li><strong>Outliers</strong>: Data points outside the whiskers are considered outliers and are often plotted as individual points.</li>
+</ul></li>
+<li><p><strong>How do I interpret a boxplot?</strong></p>
+
+<ul>
+<li><strong>Center</strong>: The line inside the box shows the median of the data.</li>
+<li><strong>Spread</strong>: The length of the box indicates the interquartile range (IQR), showing the spread of the middle 50% of the data.</li>
+<li><strong>Skewness</strong>: If the median is closer to the bottom or top of the box, the data may be skewed.</li>
+<li><strong>Outliers</strong>: Points outside the whiskers are potential outliers.</li>
+</ul></li>
+<li><p><strong>Provide boxplots for every variable of the dataset.</strong></p></li>
+</ol>
+
+<p>Let's create boxplots for each variable in the dataset using the specified style.</p>
+</p>
+    <img src="image7.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <p><p>Here are the boxplots for each variable in the dataset. Each boxplot provides a visual summary of the distribution of data points for a specific variable. The central box represents the interquartile range (IQR), with a line inside indicating the median. The whiskers extend to the smallest and largest values within 1.5 times the IQR, and any points outside the whiskers are considered outliers. By examining these boxplots, you can quickly assess the central tendency, spread, and potential outliers for each variable in the dataset.</p>
+</p>
+    <br>
+    <h3>ECDF Plots</h3>
+    <p><ol>
+<li><p><strong>What are ECDF plots?</strong></p>
+
+<p>An Empirical Cumulative Distribution Function (ECDF) plot is a graphical representation of the cumulative distribution of a dataset. It shows the proportion or count of observations falling below each unique value in a dataset. ECDF plots are useful for visualizing the distribution of data and comparing different datasets.</p></li>
+<li><p><strong>What are the components of an ECDF plot?</strong></p>
+
+<ul>
+<li><strong>X-axis</strong>: Represents the values of the variable being analyzed.</li>
+<li><strong>Y-axis</strong>: Represents the cumulative proportion or count of observations that are less than or equal to each value on the x-axis.</li>
+<li><strong>Steps</strong>: The plot consists of a series of steps that increase as you move from left to right, showing the cumulative distribution of the data.</li>
+</ul></li>
+<li><p><strong>How do I interpret an ECDF plot?</strong></p>
+
+<ul>
+<li><strong>Cumulative Proportion</strong>: The y-value at each step indicates the proportion of data points that are less than or equal to the corresponding x-value.</li>
+<li><strong>Distribution Shape</strong>: The shape of the ECDF plot can give insights into the distribution of the data. A steep slope indicates a large number of observations within a small range of values, while a gradual slope indicates a more spread-out distribution.</li>
+<li><strong>Comparisons</strong>: ECDF plots are particularly useful for comparing the distributions of different datasets or groups.</li>
+</ul></li>
+<li><p><strong>Provide ECDF plots for every variable of the dataset.</strong></p></li>
+</ol>
+
+<p>Let's create ECDF plots for each variable in the dataset using the specified style.</p>
+</p>
+    <img src="image9.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <p><p>Here are the ECDF plots for each variable in the dataset. Each plot shows the cumulative distribution of data points for a specific variable. The x-axis represents the values of the variable, while the y-axis represents the cumulative proportion of observations that are less than or equal to each value. By examining these ECDF plots, you can gain insights into the distribution and spread of each variable, as well as compare the distributions of different variables.</p>
+</p>
+    <br>
+    <h3>QQ-Plots</h3>
+    <p><ol>
+<li><p><strong>What are QQ plots?</strong></p>
+
+<p>A Quantile-Quantile (QQ) plot is a graphical tool to help assess if a dataset follows a particular distribution, most commonly the normal distribution. It compares the quantiles of the dataset against the quantiles of a theoretical distribution. If the data follows the distribution, the points will approximately lie on a straight line.</p></li>
+<li><p><strong>What are the components of a QQ plot?</strong></p>
+
+<ul>
+<li><strong>X-axis</strong>: Represents the theoretical quantiles from the specified distribution (e.g., normal distribution).</li>
+<li><strong>Y-axis</strong>: Represents the quantiles of the dataset being analyzed.</li>
+<li><strong>Line</strong>: A reference line (often a 45-degree line) that represents where the points would lie if the data perfectly followed the theoretical distribution.</li>
+</ul></li>
+<li><p><strong>How do I interpret a QQ plot?</strong></p>
+
+<ul>
+<li><strong>Linearity</strong>: If the points lie approximately along the reference line, the data likely follows the specified distribution.</li>
+<li><strong>Deviations</strong>: Points deviating from the line indicate departures from the distribution. For example, points curving away from the line at the ends suggest heavy tails.</li>
+<li><strong>Outliers</strong>: Points far from the line may indicate outliers in the data.</li>
+</ul></li>
+<li><p><strong>Provide QQ plots for every variable of the dataset.</strong></p></li>
+</ol>
+
+<p>Let's create QQ plots for each variable in the dataset using the specified method.</p>
+</p>
+    <img src="image11.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <p><p>Here are the QQ plots for each variable in the dataset. Each plot compares the quantiles of the dataset against the quantiles of a normal distribution. The x-axis represents the theoretical quantiles, while the y-axis represents the ordered values of the dataset. The red line is the reference line where the points would lie if the data perfectly followed a normal distribution. By examining these QQ plots, you can assess how closely each variable follows a normal distribution and identify any deviations or outliers.</p>
+</p>
+    <br>
+    <h1>Part 2: The Multiple Linear Regression Model</h1>
+    <br>
+    <h2>What is Multiple Linear Regression?</h2>
+    <p>Multiple linear regression is a statistical technique used to model the relationship between a dependent variable and two or more independent variables. The goal is to find the linear equation that best predicts the dependent variable based on the independent variables.</p>
+
+<h3>Model Representation</h3>
+
+<p>The multiple linear regression model can be represented as:</p>
+
+<p>\( y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} + \epsilon_i \)</p>
+
+<p>Where:</p>
+
+<ul>
+<li>\( y_i \) is the dependent variable for the \( i \)-th observation.</li>
+<li>\( \beta_0 \) is the intercept.</li>
+<li>\( \beta_1, \beta_2, \ldots, \beta_p \) are the coefficients of the independent variables.</li>
+<li>\( x_{ij} \) represents the \( j \)-th independent variable for the \( i \)-th observation.</li>
+<li>\( \epsilon_i \) is the error term for the \( i \)-th observation.</li>
+</ul>
+
+<h3>Ranges of \( i \) and \( j \)</h3>
+
+<ul>
+<li>\( i \) ranges from 1 to \( n \), where \( n \) is the number of observations in the dataset.</li>
+<li>\( j \) ranges from 1 to \( p \), where \( p \) is the number of independent variables.</li>
+</ul>
+
+<h3>Assumptions of a (Classical) Linear Regression Model</h3>
+
+<ol>
+<li><p><strong>Linearity</strong>: The relationship between the dependent variable and the independent variables is linear. This means that the change in the dependent variable is proportional to the change in the independent variables.</p>
+
+<p>\( y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} + \epsilon_i \)</p></li>
+<li><p><strong>Independence</strong>: The observations are independent of each other. This means that the value of the dependent variable for one observation is not influenced by the value of the dependent variable for another observation.</p></li>
+<li><p><strong>Homoscedasticity</strong>: The variance of the error terms (\( \epsilon_i \)) is constant across all levels of the independent variables. This means that the spread of the residuals should be the same for all values of the independent variables.</p>
+
+<p>\( \text{Var}(\epsilon_i) = \sigma^2 \)</p></li>
+<li><p><strong>Normality</strong>: The error terms (\( \epsilon_i \)) are normally distributed. This assumption is important for hypothesis testing and constructing confidence intervals.</p>
+
+<p>\( \epsilon_i \sim N(0, \sigma^2) \)</p></li>
+<li><p><strong>No Multicollinearity</strong>: The independent variables are not highly correlated with each other. High correlation between independent variables can make it difficult to determine the individual effect of each variable on the dependent variable.</p></li>
+</ol>
+
+<h3>Summary of Assumptions in Mathematical Form</h3>
+
+<ul>
+<li>Linearity: \( y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} + \epsilon_i \)</li>
+<li>Independence: Observations are independent.</li>
+<li>Homoscedasticity: \( \text{Var}(\epsilon_i) = \sigma^2 \)</li>
+<li>Normality: \( \epsilon_i \sim N(0, \sigma^2) \)</li>
+<li>No Multicollinearity: Independent variables are not highly correlated.</li>
+</ul>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>What are Regression Diagnostics?</h2>
+    <p><p>The Ordinary Least Squares (OLS) regression model has been built using <code>stem_diameter</code> as the dependent variable and all other variables as independent variables. If you have any further questions or need additional analysis, feel free to ask!</p>
+</p>
+    <br>
+    <p><p>Regression diagnostics are a set of procedures and techniques used to evaluate the validity and reliability of a regression model. They help in assessing whether the assumptions of the regression analysis are met and in identifying any potential issues that could affect the model's performance. The goal of regression diagnostics is to ensure that the model provides an accurate and meaningful representation of the relationship between the dependent and independent variables.</p>
+
+<p>These diagnostics involve examining various aspects of the regression model, such as the residuals (the differences between observed and predicted values), the influence of individual data points, and the overall fit of the model. By conducting regression diagnostics, analysts can detect problems like non-linearity, heteroscedasticity, multicollinearity, and outliers, which may lead to biased or inefficient estimates.</p>
+
+<p>Ultimately, regression diagnostics are crucial for validating the assumptions underlying the regression model and for making informed decisions about model refinement, interpretation, and application.</p>
+</p>
+    <br>
+    <h1>Part 3: Regression Diagnostics</h1>
+    <br>
+    <h2>Outliers</h2>
+    <h3>Outliers</h3>
+
+<p>Outliers are data points that differ significantly from other observations in a dataset. They can occur due to variability in the data, measurement errors, or other anomalies. Outliers can have a substantial impact on statistical analyses, including regression models, as they can skew results and lead to misleading conclusions. Identifying and addressing outliers is an essential step in data analysis to ensure the accuracy and reliability of the results.</p>
+
+<h3>Studentized Residuals</h3>
+
+<p>Studentized residuals are a type of standardized residual used in regression analysis to identify outliers. They are calculated by dividing the residuals by an estimate of their standard deviation, which accounts for the variability of the residuals. This standardization allows for a more accurate assessment of whether a residual is unusually large or small.</p>
+
+<p>The formula for the studentized residual (\( t_i \)) is:</p>
+
+<p>\( t_i = \frac{e_i}{s(e_i)} \)</p>
+
+<p>Where:</p>
+
+<ul>
+<li>\( e_i \) is the residual for the \( i \)-th observation.</li>
+<li>\( s(e_i) \) is the estimated standard deviation of the residual for the \( i \)-th observation.</li>
+</ul>
+
+<h3>Identifying Outliers Using Studentized Residuals</h3>
+
+<p>A common threshold for identifying outliers using studentized residuals is 3. This threshold is based on the properties of the normal distribution, where approximately 99.7% of the data should fall within three standard deviations of the mean. Observations with studentized residuals greater than 3 (in absolute value) are considered potential outliers.</p>
+
+<p>Let's plot the studentized residuals against the index to identify any outliers in the dataset.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <img src="image16.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <p>The plot above shows the studentized residuals plotted against the index of the observations. The red dashed lines represent the threshold of 3 and -3. Observations with studentized residuals beyond these lines are considered potential outliers.</p>
+
+<p>In this dataset, observation with index 27 has a studentized residual greater than 3, indicating it is a potential outlier.</p>
+
+<h3>Explanation of the Threshold</h3>
+
+<p>The threshold of 3 is based on the properties of the normal distribution. In a normal distribution, approximately 99.7% of the data should fall within three standard deviations of the mean. Therefore, any observation with a studentized residual greater than 3 (in absolute value) is considered unusual and potentially an outlier.</p>
+
+<h3>Should Regression Diagnostics Be Repeated After Removing Potential Outliers?</h3>
+
+<p>Yes, regression diagnostics should be repeated after removing potential outliers. Outliers can have a significant impact on the regression model, affecting the estimates of the coefficients, the fit of the model, and the validity of the assumptions. By removing outliers and re-evaluating the model, you can ensure that the results are robust and reliable.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>High-Leverage Points</h2>
+    <h3>High-Leverage Points</h3>
+
+<p>High-leverage points are observations in a dataset that have an unusually large influence on the estimation of the regression coefficients. These points are often located at the extremes of the range of the independent variables and can disproportionately affect the fit of the regression model. High-leverage points can be identified using the leverage statistic, which measures the influence of each observation on the fitted values.</p>
+
+<p>A common threshold for identifying high-leverage points is \( \frac{2p}{n} \), where \( p \) is the number of parameters (including the intercept) in the model, and \( n \) is the number of observations. Observations with leverage values greater than this threshold are considered high-leverage points.</p>
+
+<h3>Cook's Distance</h3>
+
+<p>Cook's distance is a measure used to identify influential data points in a regression analysis. It quantifies the effect of removing an observation on the estimated regression coefficients. A large Cook's distance indicates that the observation has a significant influence on the model's parameters.</p>
+
+<p>The formula for Cook's distance (\( D_i \)) is:</p>
+
+<p>\( D_i = \frac{\sum_{j=1}^{n} (\hat{y}_j - \hat{y}_{j(i)})^2}{p \cdot MSE} \)</p>
+
+<p>Where:</p>
+
+<ul>
+<li>\( \hat{y}_j \) is the predicted value for the \( j \)-th observation using all data points.</li>
+<li>\( \hat{y}_{j(i)} \) is the predicted value for the \( j \)-th observation with the \( i \)-th observation removed.</li>
+<li>\( p \) is the number of parameters in the model.</li>
+<li>\( MSE \) is the mean squared error of the model.</li>
+</ul>
+
+<p>A common threshold for identifying influential points using Cook's distance is \( \frac{4}{n} \), where \( n \) is the number of observations.</p>
+
+<p>Let's plot the leverage and Cook's distance to identify any high-leverage points and influential observations.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <img src="image18.png" alt="Descriptive Statistics" style="width:100%;;max-width: 1000px;">
+    <br>
+    <img src="image18_2.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <h3>Interpretation of the Plots</h3>
+
+<ol>
+<li><p><strong>Leverage vs Index Plot:</strong></p>
+
+<ul>
+<li>The plot shows the leverage values for each observation in the dataset. The red dashed line represents the threshold of \( \frac{2p}{n} \).</li>
+<li>Observations with leverage values above this threshold are considered high-leverage points. In this dataset, observations with indices [20, 22, 26, 30, 36, 37, 42, 58, 74, 76, 106] are identified as high-leverage points.</li>
+<li>High-leverage points have the potential to exert a strong influence on the regression model, especially if they are also outliers.</li>
+</ul></li>
+<li><p><strong>Cook's Distance vs Index Plot:</strong></p>
+
+<ul>
+<li>The plot shows Cook's distance for each observation. The red dashed line represents the threshold of \( \frac{4}{n} \).</li>
+<li>Observations with Cook's distance above this threshold are considered influential points. In this dataset, observations with indices [12, 20, 22, 27, 34, 35, 36, 74, 76] are identified as influential points.</li>
+<li>Influential points can significantly affect the estimates of the regression coefficients and the overall fit of the model.</li>
+</ul></li>
+</ol>
+
+<p>These plots help identify observations that may need further investigation due to their potential impact on the regression analysis.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>Non-Linearity</h2>
+    <h3>Non-Linearity</h3>
+
+<p>Non-linearity refers to a situation where the relationship between the independent variables and the dependent variable is not linear. In a linear regression model, it is assumed that the change in the dependent variable is proportional to the change in the independent variables. However, if this assumption is violated, the model may not accurately capture the true relationship, leading to biased or inefficient estimates.</p>
+
+<h3>Rainbow Test</h3>
+
+<p>The rainbow test is a statistical test used to detect non-linearity in a regression model. It compares the fit of the model on a subset of the data to the fit on the entire dataset. The basic idea is to split the data into two parts and compare the sum of squared residuals (SSR) from the two parts to the SSR from the entire dataset.</p>
+
+<p>The test statistic for the rainbow test is calculated as follows:</p>
+
+<ol>
+<li>Fit the model on the entire dataset and calculate the SSR: \( SSR_{\text{full}} \).</li>
+<li>Split the data into two parts (e.g., the first half and the second half) and fit the model on each part.</li>
+<li>Calculate the SSR for each part: \( SSR_1 \) and \( SSR_2 \).</li>
+<li><p>Calculate the test statistic:</p>
+
+<p>\( F = \frac{(SSR_{\text{full}} - (SSR_1 + SSR_2)) / k}{(SSR_1 + SSR_2) / (n - 2k)} \)</p>
+
+<p>Where \( k \) is the number of parameters in the model, and \( n \) is the number of observations.</p></li>
+</ol>
+
+<p>The test statistic follows an F-distribution, and a significant result indicates potential non-linearity.</p>
+
+<p>Let's perform the rainbow test and plot the residuals vs. fitted values to assess non-linearity.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <img src="image20.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <h3>Interpretation of the Rainbow Test</h3>
+
+<p>The rainbow test statistic is approximately 1.20, and the p-value is approximately 0.255. Since the p-value is greater than the common significance level (e.g., 0.05), we do not have enough evidence to reject the null hypothesis of linearity. This suggests that the assumption of linearity is not violated in this model.</p>
+
+<h3>Interpretation of the Residuals vs. Fitted Values Plot</h3>
+
+<p>The plot shows the residuals plotted against the fitted values. The red line represents a smoothed trend line, and the blue dashed line is the reference line at zero.</p>
+
+<ul>
+<li><strong>Pattern</strong>: Ideally, the residuals should be randomly scattered around the zero line, indicating that the model captures the relationship well. If there is a clear pattern (e.g., a curve), it may suggest non-linearity.</li>
+<li><strong>Spread</strong>: The spread of the residuals should be consistent across all fitted values. If the spread increases or decreases, it may indicate heteroscedasticity.</li>
+</ul>
+
+<p>In this plot, the residuals appear to be randomly scattered around the zero line, supporting the conclusion from the rainbow test that the assumption of linearity is not violated.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>Heteroscedasticity</h2>
+    <h3>Heteroscedasticity</h3>
+
+<p>Heteroscedasticity refers to a situation in regression analysis where the variance of the residuals (errors) is not constant across all levels of the independent variables. In a well-fitted linear regression model, the residuals should have constant variance, known as homoscedasticity. When this assumption is violated, it can lead to inefficient estimates and affect the validity of hypothesis tests, as standard errors may be biased.</p>
+
+<h3>Breusch-Pagan Test</h3>
+
+<p>The Breusch-Pagan test is a statistical test used to detect heteroscedasticity in a regression model. It tests the null hypothesis that the variance of the residuals is constant (homoscedasticity) against the alternative hypothesis that the variance is a function of one or more independent variables.</p>
+
+<p>The basic idea of the Breusch-Pagan test involves the following steps:</p>
+
+<ol>
+<li>Fit the original regression model and obtain the residuals.</li>
+<li>Regress the squared residuals on the independent variables (or a subset of them).</li>
+<li><p>Calculate the test statistic:</p>
+
+<p>\( \text{BP} = \frac{n \cdot R^2}{2} \)</p>
+
+<p>Where:</p>
+
+<ul>
+<li>\( n \) is the number of observations.</li>
+<li>\( R^2 \) is the coefficient of determination from the regression of squared residuals.</li>
+</ul></li>
+<li><p>The test statistic follows a chi-squared distribution with degrees of freedom equal to the number of independent variables used in the auxiliary regression.</p></li>
+</ol>
+
+<p>A significant test result indicates the presence of heteroscedasticity.</p>
+
+<p>Let's perform the Breusch-Pagan test and create a scale-location plot to assess heteroscedasticity.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <img src="image22.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <h3>Interpretation of the Breusch-Pagan Test</h3>
+
+<p>The Breusch-Pagan test statistic is approximately 19.68, and the p-value is approximately 0.073. Since the p-value is greater than the common significance level (e.g., 0.05), we do not have enough evidence to reject the null hypothesis of homoscedasticity. This suggests that the assumption of constant variance (homoscedasticity) is not violated in this model.</p>
+
+<h3>Interpretation of the Scale-Location Plot</h3>
+
+<p>The scale-location plot (also known as the spread-location plot) shows the square root of the standardized residuals plotted against the fitted values. The red line represents a smoothed trend line.</p>
+
+<ul>
+<li><strong>Pattern</strong>: Ideally, the points should be randomly scattered around the red line, indicating constant variance of the residuals. If there is a pattern (e.g., a funnel shape), it may suggest heteroscedasticity.</li>
+<li><strong>Spread</strong>: The spread of the points should be consistent across all fitted values. If the spread increases or decreases, it may indicate heteroscedasticity.</li>
+</ul>
+
+<p>In this plot, the points appear to be relatively evenly spread around the red line, supporting the conclusion from the Breusch-Pagan test that the assumption of homoscedasticity is not violated.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>Correlation of Error Terms</h2>
+    <h3>Correlation of Error Terms</h3>
+
+<p>Correlation of error terms, also known as autocorrelation, occurs when the residuals (errors) in a regression model are not independent of each other. This means that the error for one observation is correlated with the error for another observation. Autocorrelation is a common issue in time series data, where the value of a variable at one point in time may be related to its value at another point in time. When autocorrelation is present, it can lead to inefficient estimates and affect the validity of hypothesis tests.</p>
+
+<h3>Durbin-Watson Test</h3>
+
+<p>The Durbin-Watson test is a statistical test used to detect the presence of autocorrelation in the residuals of a regression model. It tests the null hypothesis that there is no autocorrelation against the alternative hypothesis that autocorrelation exists.</p>
+
+<p>The test statistic for the Durbin-Watson test is calculated as follows:</p>
+
+<p>\( DW = \frac{\sum_{t=2}^{n} (e_t - e_{t-1})^2}{\sum_{t=1}^{n} e_t^2} \)</p>
+
+<p>Where:</p>
+
+<ul>
+<li>\( e_t \) is the residual for the \( t \)-th observation.</li>
+<li>\( n \) is the number of observations.</li>
+</ul>
+
+<p>The Durbin-Watson statistic ranges from 0 to 4:</p>
+
+<ul>
+<li>A value around 2 indicates no autocorrelation.</li>
+<li>A value less than 2 suggests positive autocorrelation.</li>
+<li>A value greater than 2 suggests negative autocorrelation.</li>
+</ul>
+
+<p>A common recommended range for the Durbin-Watson statistic is 1.5 to 2.5, indicating no significant autocorrelation.</p>
+
+<p>Let's perform the Durbin-Watson test and plot the residuals over time to assess autocorrelation.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <img src="image24.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <h3>Interpretation of the Durbin-Watson Test</h3>
+
+<p>The Durbin-Watson statistic is approximately 1.44. This value is slightly below the recommended range of 1.5 to 2.5, suggesting the presence of positive autocorrelation in the residuals. Positive autocorrelation means that the residuals are correlated with each other, which can affect the efficiency of the regression estimates.</p>
+
+<h3>Interpretation of the Residuals Over Time Plot</h3>
+
+<p>The plot shows the studentized residuals plotted over the index of the observations. This visualization helps to identify patterns or trends in the residuals over time.</p>
+
+<ul>
+<li><strong>Pattern</strong>: Ideally, the residuals should be randomly scattered around zero, indicating no autocorrelation. If there is a clear pattern or trend, it may suggest autocorrelation.</li>
+<li><strong>Trend</strong>: In this plot, there appears to be some clustering of residuals, which aligns with the Durbin-Watson test result indicating potential positive autocorrelation.</li>
+</ul>
+
+<p>Overall, the Durbin-Watson test and the residuals plot suggest that there may be some correlation of error terms in the model, which could impact the reliability of the regression analysis.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>Normality of Residuals</h2>
+    <h3>Normality of Residuals</h3>
+
+<p>The normality of residuals is an assumption in linear regression that the residuals (errors) are normally distributed. This assumption is important for conducting hypothesis tests and constructing confidence intervals for the regression coefficients. If the residuals are not normally distributed, it can affect the validity of these statistical inferences.</p>
+
+<h3>Shapiro-Wilk Test</h3>
+
+<p>The Shapiro-Wilk test is a statistical test used to assess the normality of a dataset. It tests the null hypothesis that the data is normally distributed against the alternative hypothesis that it is not.</p>
+
+<p>The basic idea of the Shapiro-Wilk test involves the following steps:</p>
+
+<ol>
+<li>Order the data from smallest to largest.</li>
+<li><p>Calculate the test statistic \( W \):</p>
+
+<p>\( W = \frac{\left( \sum_{i=1}^{n} a_i x_{(i)} \right)^2}{\sum_{i=1}^{n} (x_i - \bar{x})^2} \)</p>
+
+<p>Where:</p>
+
+<ul>
+<li>\( x_{(i)} \) are the ordered data points.</li>
+<li>\( \bar{x} \) is the mean of the data.</li>
+<li>\( a_i \) are constants derived from the expected values of the order statistics of a standard normal distribution.</li>
+</ul></li>
+<li><p>The test statistic \( W \) ranges from 0 to 1, with values close to 1 indicating normality.</p></li>
+</ol>
+
+<p>A significant test result (low p-value) suggests that the data is not normally distributed.</p>
+
+<p>Let's perform the Shapiro-Wilk test and create a QQ plot of the standardized residuals to assess normality.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <img src="image26.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <h3>Interpretation of the Shapiro-Wilk Test</h3>
+
+<p>The Shapiro-Wilk test statistic is approximately 0.985, and the p-value is approximately 0.199. Since the p-value is greater than the common significance level (e.g., 0.05), we do not have enough evidence to reject the null hypothesis of normality. This suggests that the residuals are approximately normally distributed.</p>
+
+<h3>Interpretation of the QQ Plot</h3>
+
+<p>The QQ plot compares the quantiles of the standardized residuals against the quantiles of a normal distribution. The x-axis represents the theoretical quantiles, while the y-axis represents the ordered values of the standardized residuals. The red line is the reference line where the points would lie if the data perfectly followed a normal distribution.</p>
+
+<ul>
+<li><strong>Linearity</strong>: If the points lie approximately along the reference line, the residuals are likely normally distributed.</li>
+<li><strong>Deviations</strong>: Points deviating from the line indicate departures from normality.</li>
+</ul>
+
+<p>In this QQ plot, the points generally follow the reference line, supporting the conclusion from the Shapiro-Wilk test that the residuals are approximately normally distributed. This indicates that the assumption of normality is not violated in this model.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>Collinearity of Predictors</h2>
+    <h3>Collinearity of Predictors</h3>
+
+<p>Collinearity, or multicollinearity, refers to a situation in regression analysis where two or more independent variables are highly correlated with each other. This can make it difficult to determine the individual effect of each predictor on the dependent variable, as changes in one predictor may be associated with changes in another. Multicollinearity can lead to unstable estimates of the regression coefficients and inflate the standard errors, making it challenging to assess the significance of predictors.</p>
+
+<h3>Variance Inflation Factor (VIF)</h3>
+
+<p>The Variance Inflation Factor (VIF) is a measure used to quantify the degree of multicollinearity in a set of multiple regression variables. It provides an index that measures how much the variance of an estimated regression coefficient increases when your predictors are correlated.</p>
+
+<p>The basic idea of VIF involves the following steps:</p>
+
+<ol>
+<li>For each predictor variable, regress it on all other predictors.</li>
+<li>Calculate the coefficient of determination (\( R^2 \)) for this regression.</li>
+<li><p>Compute the VIF for each predictor:</p>
+
+<p>\( \text{VIF}_j = \frac{1}{1 - R^2_j} \)</p>
+
+<p>Where \( R^2_j \) is the coefficient of determination for the regression of the \( j \)-th predictor on all other predictors.</p></li>
+</ol>
+
+<p>A VIF value greater than 10 is often used as a threshold to indicate significant multicollinearity.</p>
+
+<p>Let's calculate the VIF for each predictor and plot the correlation matrix to assess multicollinearity.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <img src="image28.png" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <h3>Interpretation of the Variance Inflation Factor (VIF)</h3>
+
+<p>The VIF values for each predictor are listed in the table. A VIF value greater than 10 indicates significant multicollinearity. In this dataset, several variables have VIF values well above 10, suggesting that multicollinearity is a concern. For example, <code>dw_healthy</code>, <code>dw_total</code>, <code>fw_pulb</code>, <code>fw_total</code>, and others have extremely high VIF values, indicating that these predictors are highly correlated with each other.</p>
+
+<h3>Interpretation of the Correlation Matrix Plot</h3>
+
+<p>The correlation matrix plot shows the pairwise correlation coefficients between all variables in the dataset. The values range from -1 to 1, where:</p>
+
+<ul>
+<li>A value close to 1 indicates a strong positive correlation.</li>
+<li>A value close to -1 indicates a strong negative correlation.</li>
+<li>A value close to 0 indicates little to no correlation.</li>
+</ul>
+
+<p>The heatmap uses colors to represent the strength and direction of the correlations, with the color scale ranging from cool (negative correlation) to warm (positive correlation).</p>
+
+<ul>
+<li><strong>Reading the Plot</strong>: Each cell in the heatmap represents the correlation between two variables. The diagonal cells are always 1, as they represent the correlation of each variable with itself. Off-diagonal cells show the correlation between different variables.</li>
+</ul>
+
+<p>In this plot, you can observe strong correlations between several variables, which aligns with the high VIF values and indicates multicollinearity. This multicollinearity can affect the stability and interpretability of the regression model.</p>
+
+    <script>
+        MathJax.typeset();  // Renders the LaTeX after the page loads
+    </script>
+    <br>
+    <h2>Summary of Results</h2>
+    <p>Here's a summary of the regression diagnostics results:</p>
+
+<ol>
+<li><p><strong>Outliers</strong>:</p>
+
+<ul>
+<li>Identified using studentized residuals with a threshold of 3.</li>
+<li>Observation with index 27 was identified as a potential outlier.</li>
+</ul></li>
+<li><p><strong>High-Leverage Points</strong>:</p>
+
+<ul>
+<li>Identified using leverage with a threshold of \( \frac{2p}{n} \).</li>
+<li>Observations with indices [20, 22, 26, 30, 36, 37, 42, 58, 74, 76, 106] were identified as high-leverage points.</li>
+</ul></li>
+<li><p><strong>Non-Linearity</strong>:</p>
+
+<ul>
+<li>Assessed using the rainbow test and the residuals vs. fitted values plot.</li>
+<li>The rainbow test did not indicate a violation of linearity, and the residuals plot supported this conclusion.</li>
+</ul></li>
+<li><p><strong>Heteroscedasticity</strong>:</p>
+
+<ul>
+<li>Assessed using the Breusch-Pagan test and the scale-location plot.</li>
+<li>The Breusch-Pagan test did not indicate a violation of homoscedasticity, and the scale-location plot supported this conclusion.</li>
+</ul></li>
+<li><p><strong>Correlation of Error Terms</strong>:</p>
+
+<ul>
+<li>Assessed using the Durbin-Watson test and the residuals over time plot.</li>
+<li>The Durbin-Watson statistic suggested potential positive autocorrelation, and the residuals plot showed some clustering.</li>
+</ul></li>
+<li><p><strong>Normality of Residuals</strong>:</p>
+
+<ul>
+<li>Assessed using the Shapiro-Wilk test and the QQ plot.</li>
+<li>The Shapiro-Wilk test did not indicate a violation of normality, and the QQ plot supported this conclusion.</li>
+</ul></li>
+<li><p><strong>Collinearity of Predictors</strong>:</p>
+
+<ul>
+<li>Assessed using the Variance Inflation Factor (VIF) and the correlation matrix plot.</li>
+<li>Several predictors had VIF values well above 10, indicating significant multicollinearity. The correlation matrix plot showed strong correlations between several variables.</li>
+</ul></li>
+</ol>
+
+<p>Overall, the diagnostics suggest that while the model does not violate assumptions of linearity, homoscedasticity, and normality, there are concerns with multicollinearity and potential autocorrelation of error terms. Addressing these issues may improve the reliability and interpretability of the regression model.</p>
+
+</body>
+</html>

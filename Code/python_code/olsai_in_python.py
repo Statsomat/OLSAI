@@ -203,7 +203,7 @@ html_template = f"""
     <br>
     <h3>ECDF Plots</h3>
     <p>{full_output['text8']}</p>
-    <img src="{full_output['text9']}" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
+    <img src="{full_output['img9']}" alt="Descriptive Statistics" style="width:100%;max-width: 1000px;">
     <p>{full_output['text9']}</p>
     <br>
     <h3>QQ-Plots</h3>
